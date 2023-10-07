@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cocalc-python"
+dynamic = ["version"]
+authors = [{name = "Saman Zand Haghighi", email = "samanzandh@gmail.com"}]
+license = {text = "BSD"}
+description = "A client for interacting with CoCalc-API."
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.8"
+dependencies = ["requests>=2.25.0"]
+
+[project.urls]
+Homepage = "http://github.com/saman-zand-h/cocalc-python"
+
+[tool.setuptools]
+zip-safe = false
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["conf*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "flex_menu.__version__"}
+
+[tool.mypy]
+python_version = "3.8"
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
