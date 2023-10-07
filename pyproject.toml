@@ -38,7 +38,7 @@ include-package-data = true
 exclude = ["conf*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "flex_menu.__version__"}
+version = {attr = "cocalc.__version__"}
 
 [tool.mypy]
 python_version = "3.8"
