@@ -4,26 +4,28 @@ from pathlib import Path
 from uuid import uuid4
 
 import requests
-from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
+from . import constants
 from .exceptions import CocalcError
 
 logger = getLogger(__file__)
-load_dotenv()
 
 
 class CocalcApiClient:
     def __init__(
         self,
-        api_key=os.environ.get("COCALC_APIKEY"),
-        project_id=os.environ.get("COCALC_PROJECTID"),
-        base_url=os.environ.get("COCALC_BASEURL"),
+        *,
+        api_key=os.environ.get(constants.COCALC_APIKEY_NAME),
+        base_url=os.environ.get(constants.COCALC_BASEURL_NAME),
     ):
-        if not api_key:
-            raise ValueError("COCALC_APIKEY is not set")
+        if api_key is None:
+            raise ValueError(f"{constants.COCALC_APIKEY_NAME} is not set")
+
+        if base_url is None:
+            raise ValueError(f"{constants.COCALC_BASEURL_NAME} is not set")
+
         self.api_key = api_key
-        self.project_id = project_id
         self.base_url = base_url
 
     def _request(self, endpoint, method="GET", data=None):
@@ -38,22 +40,13 @@ class CocalcApiClient:
     def _download_pdf(self, url):
         return requests.get(url).content
 
-    def latex(
-        self,
-        path=None,
-        content=None,
-        command="latexmk -xelatex -f -g -bibtex -deps -synctex=1 -interaction=nonstopmode",
-    ):
-        params = {"project_id": self.project_id}
-
+    def latex(self, path=None, content=None, command=constants.COCALC_LATEX_COMMAND):
         path = Path(f"temp/{uuid4()}/main.tex" if not path else path)
-        params.update(
-            {
-                "path": path,
-                "content": content,
-                "command": command,
-            }
-        )
+        params = {
+            "path": path,
+            "content": content,
+            "command": command,
+        }
 
         response_json = self._request(f"v2/latex", "POST", params).json()
 
@@ -67,8 +60,7 @@ class CocalcApiClient:
         return self._download_pdf(response_json["url"])
 
     def exec(self, command):
-        params = {"command": command, "project_id": self.project_id}
-        return self._request("v1/project_exec", "POST", params)
+        return self._request("v1/project_exec", "POST", {"command": command})
 
     def _rm_dir(self, path):
         return self.exec(f"rm -rf {path}")
