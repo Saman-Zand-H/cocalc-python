@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cocalc-python"
-dynamic = ["version"]
+dynamic = ["version", "dependencies"]
 authors = [{name = "Saman Zand Haghighi", email = "samanzandh@gmail.com"}]
-license = {text = "BSD"}
+license = {text = "ignore_missing_imports"}
 description = "A client for interacting with CoCalc-API."
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
+    "License :: OSI Approved :: ignore_missing_imports License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -25,7 +25,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 requires-python = ">=3.8"
-dependencies = ["requests>=2.25.0"]
 
 [project.urls]
 Homepage = "http://github.com/saman-zand-h/cocalc-python"
@@ -39,6 +38,7 @@ exclude = ["conf*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "cocalc.__version__"}
+dependencies = {file = ["requirements.txt"]}
 
 [tool.mypy]
 python_version = "3.8"
