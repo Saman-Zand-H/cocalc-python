@@ -6,15 +6,20 @@ build-backend = "setuptools.build_meta"
 name = "cocalc-python"
 dynamic = ["version", "dependencies"]
 authors = [{name = "Saman Zand Haghighi", email = "samanzandh@gmail.com"}]
-license = {text = "ignore_missing_imports"}
+license = {text = "MIT"}
 description = "A client for interacting with CoCalc-API."
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
+    "Framework :: Django",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: ignore_missing_imports License",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -48,4 +53,5 @@ disallow_untyped_decorators = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
+module = ["django.*"]
 ignore_missing_imports = true

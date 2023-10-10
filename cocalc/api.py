@@ -18,6 +18,7 @@ class CocalcApiClient:
         *,
         api_key=os.environ.get(constants.COCALC_APIKEY_NAME),
         base_url=os.environ.get(constants.COCALC_BASEURL_NAME),
+        project_id=os.environ.get(constants.COCALC_PROJECTID_NAME),
     ):
         if api_key is None:
             raise ValueError(f"{constants.COCALC_APIKEY_NAME} is not set")
@@ -25,8 +26,12 @@ class CocalcApiClient:
         if base_url is None:
             raise ValueError(f"{constants.COCALC_BASEURL_NAME} is not set")
 
+        if project_id is None:
+            raise ValueError(f"{constants.COCALC_PROJECTID_NAME} is not set")
+
         self.api_key = api_key
         self.base_url = base_url
+        self.project_id = project_id
 
     def _request(self, endpoint, method="GET", data=None):
         auth = HTTPBasicAuth(self.api_key, None)
@@ -46,6 +51,7 @@ class CocalcApiClient:
             "path": path,
             "content": content,
             "command": command,
+            "project_id": self.project_id,
         }
 
         response_json = self._request(f"v2/latex", "POST", params).json()
@@ -60,7 +66,8 @@ class CocalcApiClient:
         return self._download_pdf(response_json["url"])
 
     def exec(self, command):
-        return self._request("v1/project_exec", "POST", {"command": command})
+        params = {"project_id": self.project_id, "command": command}
+        return self._request("v1/project_exec", "POST", params)
 
     def _rm_dir(self, path):
         return self.exec(f"rm -rf {path}")
