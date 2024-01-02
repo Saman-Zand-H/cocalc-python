@@ -45,7 +45,7 @@ class CocalcApiClient:
     def _download_pdf(self, url):
         return requests.get(url).content
 
-    def latex(self, path=None, content=None, command=constants.COCALC_LATEX_COMMAND):
+    def latex(self, path=None, content=None, command=constants.COCALC_LATEX_COMMAND, temporary=False):
         path = Path(f"temp/{uuid4()}/main.tex" if not path else path)
         params = {
             "path": path,
@@ -56,6 +56,9 @@ class CocalcApiClient:
 
         response_json = self._request(f"v2/latex", "POST", params).json()
 
+        if not temporary:
+            return self._download_pdf(response_json["url"])
+        
         try:
             if (compile_msg := response_json["compile"])["event"] == "error":
                 logger.error(compile_msg.get("error"))
